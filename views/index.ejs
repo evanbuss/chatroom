@@ -1,0 +1,160 @@
+<html>
+  <head>
+    <title>Live Chatroom</title>
+    <!-- jQuery -->
+    <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
+    <!-- bootstrap -->
+    <link href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css" rel="stylesheet">
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/js/bootstrap.min.js"></script>
+    <!-- Socket.io -->
+      <script type ="text/javascript" src="/socket.io/socket.io.js"></script>
+      <script type ="text/javascript">
+          $(document).ready(function (){
+            var socket = io.connect();
+            var name = prompt("what is your name?");
+            console.log("the current user is", name);
+             socket.emit('client-emit', name);
+
+             $('#new-user').on('click', function() {
+                var name = prompt("what is your name?");
+                console.log("the current user is", name);
+                socket.emit('client-emit', name);
+             });
+
+            socket.on('users_in_chat', function (data) {
+              console.log(data);
+              $('#content').append("<p>"+data[data.length-1].name+" just joined the chatroom</p>");
+            });
+
+            socket.on('server_response', function (data) {
+              for(var x in data.data) {
+                console.log(data);
+                    $('#content').append('<p">'+data.name+": "+data.data[x].value + " "+'</p><br>');
+                  }
+            });
+              $('form').submit(function (){
+                  socket.emit('client-message', { data: $(this).serializeArray(), name:name});
+                  console.log("sent")
+                  $('#message').val(' ');
+                  return false;
+              });
+            socket.on('disconnect_user', function (data) {
+                  console.log('removed user',data.user);
+                    $('#content').append("<p>"+data.user.name+" just left the chatroom</p>");
+            });
+
+
+          });
+
+      </script>
+      <style type="text/css">
+      #down {
+        margin-top: 75px;
+      }
+      #field {
+        height: auto;
+        border: 1px solid black;
+        background-color: grey;
+        border-radius: 5px;
+      }
+      #content {
+        background-color: lightgrey;
+        color: black;
+        border-radius: 5px;
+      }
+      #new-user {
+        color: royalblue;
+        font-family: 'Helvetica';
+        font-size: 17px;
+      }
+      #message {
+        border: 1px solid grey;
+      }
+      .box {
+        border: 1px solid silver;
+        background-color: whitesmoke;
+        box-shadow: 5px 5px 4px grey;
+        height: auto;
+        border-radius: 5px;
+      }
+      .textbox {
+        width: 400px;
+      }
+      .info {
+        font-family: 'Times New Roman';
+        font-size: 15px;
+        margin-left: 25px;
+      }
+      #center {
+        text-align: center;
+      }
+      .button-primary {
+        box-shadow: 2px 2px 1px lightblue;
+        font-family: 'Arial';
+        border: 1px solid lightgrey;
+      }
+        .button-primary:hover {
+            background-color: lightgrey;
+            box-shadow: 4px 4px 2px whitesmoke;
+            color: whitesmoke;
+            border: 1px solid lightblue;
+        }
+      </style>
+  </head>
+
+  <body>
+      <!-- Fixed navbar -->
+      <nav class="navbar navbar-default navbar-fixed-top">
+        <div class="container">
+          <div class="navbar-header">
+            <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar" aria-expanded="false" aria-controls="navbar">
+              <span class="sr-only">Toggle navigation</span>
+              <span class="icon-bar"></span>
+              <span class="icon-bar"></span>
+              <span class="icon-bar"></span>
+            </button>
+            <a class="navbar-brand" href="#">Live Chatroom</a>
+          </div>
+          <div id="navbar" class="navbar-collapse collapse">
+            <ul class="nav navbar-nav navbar-right">
+              <li class="active"><a href="#" id="new-user">New User</a></li>
+          </div><!--/.nav-collapse -->
+        </div>
+      </nav>
+
+      <div class="container-fluid" id ="down">
+
+        <!-- Main component for a primary marketing message or call to action -->
+        <div class="jumbotron">
+          <h1>Live Chatroom</h1>
+          <p>This is a quick example of a live chatroom using a node server with sockets.</p>
+        </div>
+
+      </div> <!-- /container -->
+
+      <div class="container-fluid">
+
+        <!-- Main component for a primary marketing message or call to action -->
+        <div class="jumbotron">
+            <div class="box">
+              <div id="content">
+                <!-- socket name and messages here -->
+              </div>
+              <div id="field">
+                <form method="post">
+                  <label id="message">message</label>
+                  <textarea class="form-control" id="message" name="message" type="text" cols="50"></textarea><br>
+                  <input class="button-primary" type="submit" name="sumbit" value="Send">
+                </form>
+              </div>
+            </div>
+        </div>
+
+      </div> <!-- /container -->
+
+
+
+
+
+  </body>
+</html>
