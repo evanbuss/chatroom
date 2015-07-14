@@ -35,7 +35,7 @@
               $('form').submit(function (){
                   socket.emit('client-message', { data: $(this).serializeArray(), name:name});
                   console.log("sent")
-                  $('#message').val(' ');
+                  $('form').trigger("reset");
                   return false;
               });
             socket.on('disconnect_user', function (data) {
