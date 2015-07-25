@@ -88,17 +88,14 @@
       #center {
         text-align: center;
       }
-      .button-primary {
-        box-shadow: 2px 2px 1px lightblue;
-        font-family: 'Arial';
-        border: 1px solid lightgrey;
+
+      .btn {
+        box-shadow: 2px 2px 1px lightgrey;
       }
-        .button-primary:hover {
-            background-color: lightgrey;
-            box-shadow: 4px 4px 2px whitesmoke;
-            color: whitesmoke;
-            border: 1px solid lightblue;
+        .btn:hover {
+          box-shadow: 3px 3px 2px black;
         }
+
       </style>
   </head>
 
@@ -144,7 +141,7 @@
                 <form method="post">
                   <label id="message">message</label>
                   <textarea class="form-control" id="message" name="message" type="text" cols="50"></textarea><br>
-                  <input class="button-primary" type="submit" name="sumbit" value="Send">
+                  <input class="btn btn-default" type="submit" name="sumbit" value="Send">
                 </form>
               </div>
             </div>
